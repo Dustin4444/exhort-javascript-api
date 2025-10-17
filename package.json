@@ -71,7 +71,7 @@
 		"msw": "^1.3.2",
 		"sinon": "^15.1.2",
 		"sinon-chai": "^3.7.0",
-		"typescript": "^5.1.3"
+		"typescript": "^5.9.2"
 	},
 	"mocha": {
 		"check-leaks": false,
