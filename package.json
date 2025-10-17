@@ -48,7 +48,7 @@
 		"compileintegration": "bash -c \"cd generated/backend ; tsc -p tsconfig.json ; cd ../..\""
 	},
 	"dependencies": {
-		"@babel/core": "^7.23.2",
+		"@babel/core": "^7.28.4",
 		"@cyclonedx/cyclonedx-library": "~1.13.3",
 		"fast-toml": "^0.5.4",
 		"fast-xml-parser": "^4.2.4",
@@ -58,7 +58,7 @@
 		"node-fetch": "^2.6.7"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.23.2",
+		"@babel/core": "^7.28.4",
 		"@openapitools/openapi-generator-cli": "^2.6.0",
 		"@types/node": "^20.3.1",
 		"babel-plugin-rewire": "^1.2.0",
