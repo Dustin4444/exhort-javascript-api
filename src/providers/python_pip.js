@@ -16,13 +16,15 @@ import { getParser, getIgnoreQuery, getPinnedVersionQuery } from './requirements
 
 export default { isSupported, validateLockFile, provideComponent, provideStack, readLicenseFromManifest }
 
-/** @typedef {{name: string, version: string, dependencies: DependencyEntry[]}} DependencyEntry */
+/** @typedef {{name: string, version: string, dependencies: DependencyEntry[], hashes?: Array<{alg: string, content: string}>}} DependencyEntry */
 
 /**
  * @type {string} ecosystem for python-pip is 'pip'
  * @private
  */
 const ecosystem = 'pip'
+
+const NO_SCOPE = undefined
 
 /**
  * @param {string} manifestName - the subject manifest name-type
@@ -73,8 +75,6 @@ async function provideComponent(manifest, opts = {}) {
 	}
 }
 
-/** @typedef {{name: string, , version: string, dependencies: DependencyEntry[]}} DependencyEntry */
-
 /**
  *
  * @param {PackageURL}source
@@ -84,7 +84,7 @@ async function provideComponent(manifest, opts = {}) {
  */
 function addAllDependencies(source, dep, sbom) {
 	let targetPurl = toPurl(dep["name"], dep["version"])
-	sbom.addDependency(source, targetPurl)
+	sbom.addDependency(source, targetPurl, NO_SCOPE, dep["hashes"])
 	let directDeps = dep["dependencies"]
 	if (directDeps !== undefined && directDeps.length > 0) {
 		directDeps.forEach((dependency) => { addAllDependencies(toPurl(dep["name"], dep["version"]), dependency, sbom) })
@@ -226,7 +226,7 @@ async function getSbomForComponentAnalysis(manifest, opts = {}) {
 	const license = readLicenseFromManifest(manifest);
 	sbom.addRoot(rootPurl, license);
 	dependencies.forEach(dep => {
-		sbom.addDependency(rootPurl, toPurl(dep.name, dep.version))
+		sbom.addDependency(rootPurl, toPurl(dep.name, dep.version), NO_SCOPE, dep.hashes)
 	})
 	await handleIgnoredDependencies(manifest, sbom, opts)
 	// In python there is no root component, then we must remove the dummy root we added, so the sbom json will be accepted by the DA backend
