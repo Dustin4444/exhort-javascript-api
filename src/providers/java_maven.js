@@ -22,6 +22,11 @@ import Base_java, { ecosystem_maven } from "./base_java.js";
 
 /** @typedef {{groupId: string, artifactId: string, version: string, scope: string, ignore: boolean}} Dependency */
 
+// Matches the legacy `exhortignore` and new `trustify-da-ignore` markers as whole
+// tokens. The trailing `(?![\w-])` boundary prevents lookalikes such as
+// `trustify-da-ignore-disabled` from being treated as ignore directives.
+const IGNORE_MARKER_REGEX = /(exhortignore|trustify-da-ignore)(?![\w-])/
+
 export default class Java_maven extends Base_java {
 	constructor() {
 		super('mvn', 'mvnw' + (process.platform === 'win32' ? '.cmd' : ''))
@@ -336,7 +341,8 @@ export default class Java_maven extends Base_java {
 	}
 
 	/**
-	 * Get a list of dependencies with marking of dependencies commented with <!--exhortignore-->.
+	 * Get a list of dependencies with marking of dependencies commented with
+	 * <!--exhortignore--> or <!--trustify-da-ignore-->.
 	 * @param {string} manifest - path for pom.xml
 	 * @returns {[Dependency]} an array of dependencies
 	 * @private
@@ -354,7 +360,7 @@ export default class Java_maven extends Base_java {
 		let buf = fs.readFileSync(manifest)
 		// parse manifest pom.xml to json
 		let pomJson = parser.parse(buf.toString())
-		// iterate over all dependencies and chery pick dependencies with a exhortignore comment
+		// iterate over all dependencies and chery pick dependencies with an ignore comment
 		let pomXml;
 		// project without modules
 		if (pomJson['project']) {
@@ -369,7 +375,7 @@ export default class Java_maven extends Base_java {
 
 		pomXml.forEach(dep => {
 			let ignore = false
-			if (dep['#comment'] && dep['#comment'].includes('exhortignore')) { // #comment is an array or a string
+			if (dep['#comment'] && [].concat(dep['#comment']).some(comment => IGNORE_MARKER_REGEX.test(comment))) { // #comment is an array or a string
 				ignore = true
 			}
 			if (dep['scope'] !== 'test') {

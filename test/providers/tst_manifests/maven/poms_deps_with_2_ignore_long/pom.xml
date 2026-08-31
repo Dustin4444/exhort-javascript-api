@@ -51,12 +51,12 @@
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-vertx-http</artifactId> <!-- exhortignore-->
+			<artifactId>quarkus-vertx-http</artifactId> <!-- trustify-da-ignore-->
 			<version>2.13.5.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-jdbc-postgresql</artifactId>
+			<artifactId>quarkus-jdbc-postgresql</artifactId> <!-- trustify-da-ignore-invalidmarker-->
 			<version>2.13.6.Final</version>
 		</dependency>
 	</dependencies>
