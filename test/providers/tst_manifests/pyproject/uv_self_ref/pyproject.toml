@@ -8,7 +8,7 @@ dependencies = [
     "uvicorn==0.17.0",
     "click==8.0.4",
     "beautifulsoup4==4.12.2",
-    "certifi==2023.7.22",
+    "certifi==2026.10.19",
 ]
 
 [build-system]
